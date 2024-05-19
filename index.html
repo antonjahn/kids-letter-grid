@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kid's Letter Grid</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+        
+        body {
+            font-family: 'Comic Neue', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            box-sizing: border-box;
+            background-color: #f0f8ff;
+        }
+        .container {
+            text-align: center;
+            border: 5px solid #ff69b4;
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            background-color: #fff;
+            border-radius: 20px;
+        }
+        .grid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-gap: 5px;
+            margin-top: 20px;
+        }
+        .grid div {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background-color: #ffebcd;
+            border-radius: 5px;
+        }
+        .print-button {
+            margin-top: 20px;
+            background-color: #ff69b4;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .print-button:hover {
+            background-color: #ff1493;
+        }
+        @media print {
+            .print-button, .input-section {
+                display: none;
+            }
+            .container {
+                width: 100%;
+                border: none;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                height: auto;
+                background-color: #fff;
+            }
+        }
+        #name-display {
+            font-size: 50px;
+            margin-top: 20px;
+            color: #ff69b4;
+        }
+        #name-input {
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 2px solid #ff69b4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <label for="name-input">Enter Name: </label>
+            <input type="text" id="name-input" oninput="generateGrid()">
+        </div>
+        <div id="name-display"></div>
+        <div class="grid-container">
+            <div class="grid" id="letter-grid"></div>
+        </div>
+        <button class="print-button" onclick="window.print()">Print</button>
+    </div>
+    <script>
+        const gridSize = 10;
+
+        function generateGrid() {
+            const name = document.getElementById('name-input').value.toUpperCase();
+            const nameDisplay = document.getElementById('name-display');
+            const grid = document.getElementById('letter-grid');
+
+            if (name.length === 0) {
+                grid.innerHTML = '';
+                nameDisplay.textContent = '';
+                return;
+            }
+
+            nameDisplay.textContent = name;
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß';
+            const gridLetters = [...name];
+
+            while (gridLetters.length < gridSize * gridSize) {
+                gridLetters.push(letters[Math.floor(Math.random() * letters.length)]);
+            }
+
+            // Shuffle the letters array
+            for (let i = gridLetters.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [gridLetters[i], gridLetters[j]] = [gridLetters[j], gridLetters[i]];
+            }
+
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.textContent = gridLetters[i];
+                grid.appendChild(cell);
+            }
+        }
+    </script>
+</body>
+</html>
